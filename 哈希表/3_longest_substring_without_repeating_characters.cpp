@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <vector>
 #include <string>
@@ -44,6 +45,7 @@ int Solution::lengthOfLongestSubstring(string s) {
     }
     maxLength = max(maxLength, currMaxLength);
     // 下面的代码是暴力破解 用时420ms
+*/
 /*
     for (int i = 0; i < strLength; i++) {
         for (int j = i; j < strLength; j++) {
@@ -58,9 +60,10 @@ int Solution::lengthOfLongestSubstring(string s) {
         currMaxLength = 0;
     }
 */
-    return maxLength;
-}
+//    return maxLength;
+// }
 
+/*
 int main(void) {
     string s;
     Solution solution;
@@ -68,4 +71,51 @@ int main(void) {
         cout << solution.lengthOfLongestSubstring(s) << endl;
     }
     return 0;
+}
+*/
+
+
+#include <iostream>
+#include <string>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s);
+};
+
+int Solution::lengthOfLongestSubstring(string s) {
+	if (s.size() <= 1)
+		return s.size();
+	map<char, int> index;
+	int maxLength = INT_MIN;
+	for (int i = 0, j = 0; i < s.size() && j < s.size();) {
+        // 当没有出现j处的字符或者出现了，但是在i之前，都可以视为没有出现过，继续更新最大长度
+		if (!index.count(s[j]) || index[s[j]] < i) {
+			index[s[j]] = j;
+			maxLength = max(maxLength, j - i + 1);
+		} else {
+            // 否则，更新头的位置，即i的位置
+            // 更新j处字符的最新位置
+			if (index[s[j]] >= i) {
+				i = index[s[j]] + 1;
+				index[s[j]] = j;
+			}
+		}
+		j++;
+	}
+	return maxLength;
+}
+
+int main() {
+	Solution solution;
+	string s;
+	while (cin >> s) {
+		cout << "最长不重复子串的长度为" << solution.lengthOfLongestSubstring(s) << endl;
+	}
+	return 0;
 }
