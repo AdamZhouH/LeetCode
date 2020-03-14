@@ -13,6 +13,9 @@
 #include <sstream>
 using namespace std;
 
+#define VERSION2020_03_13
+
+#ifndef VERSION2020_03_13
 class Solution {
 public:
 	int findRotationPoint(vector<int> &nums);
@@ -75,6 +78,53 @@ int Solution::binarySearch(vector<int> &nums, int low, int high, int target) {
 	}
 	return -1;
 }
+#else
+/**
+ * 另外的思路则是，不直接寻找旋转点，而是直接使用二分查找，但是在二分查找的过程中
+ * 由于存在一个旋转点，导致不能根据单一的一个条件，即nums[mid]于target的关系
+ * 得到下次二分在左侧区间还是右侧区间，因此还需判断nums[left]和nums[mid]的关系
+ * 以及target和nums[mid] nums[left] nums[right]的关系在判断下次查找在左侧还是右侧区间
+ * 可能都会用到
+ * 具体的情况可以通过画图来体现
+*/
+class Solution {
+public:
+	int search(vector<int> &nums, int target);
+};
+
+int Solution::search(vector<int> &nums, int target) {
+	// 由于存在旋转点，需要多个条件确定下一次target的查找区间
+	int left = 0, right = nums.size() - 1;
+	int mid = 0;
+	while (left <= right) {
+		mid = left + (right - left) / 2;
+
+		if (target == nums[mid])
+			return mid;
+		// 根据nums[mid]和nums[left]的情况判断最小值点(旋转点)在哪一侧
+		else if (nums[left] <= nums[mid]) {  // 最小值点在右侧
+			// 根据target和nums[mid]的关系，判断下次查找在哪一侧
+
+			// 若target > nums[mid]，则在右侧查找
+			// 若target < nums[mid] && target >= nums[left]，则在左侧查找
+			// 若target < nums[mid] 但是 target <= nums[left]，则仍在右侧查找
+			if (target < nums[mid] && target >= nums[left])
+				right = mid - 1;
+			else
+				left = mid + 1;
+		} else {  // 最小值点在左侧
+			// 若target < nums[mid]，则在左侧查找
+			// 若target > nums[mid] && target <= nums[right]，则在右侧查找
+			// 若target > nums[mid] 但是 target >= nums[right]，则在左侧查找
+			if (target > nums[mid] && target <= nums[right])
+				left = mid + 1;
+			else
+				right = mid - 1;
+		}
+	}
+	return -1;
+}
+#endif
 
 int main(int argc, char *argv[]) {
 	vector<int> arr;
