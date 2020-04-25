@@ -42,6 +42,48 @@ void Solution::help(vector<int> &nums, vector<vector<int>> &ret, vector<int> &cu
 		curr.pop_back();
 	}
 }
+// 第二个版本，3个月后的简洁一些，进步一些的代码
+class Solution {
+public:
+	vector<vector<int>> permute(vector<int> &nums);
+};
+
+
+inline void swap(vector<int>& nums, int i, int j) {
+	int temp = nums[i];
+	nums[i] = nums[j];
+	nums[j] = temp;
+}
+
+void permute(vector<int>& nums, int idx, vector<vector<int>>& ans) {
+	if (idx == nums.size()) {
+		ans.push_back(nums);
+		return;
+	}
+	for (int i = idx; i < nums.size(); i++) {
+		swap(nums, idx, i);
+		permute(nums, idx+1, ans);
+		swap(nums, idx, i);
+	}
+}
+
+vector<vector<int>> Solution::permute(vector<int> &nums) {
+	vector<vector<int>> ans;
+	if (nums.empty()) return ans;
+	::permute(nums, 0, ans);
+	return ans;
+}
+
+// 给出一种全排列方法，直接使用STL库
+vector<vector<int>> permute(vector<int> &nums) {
+    vector<vector<int>> ret;
+    if (nums.empty()) return ret;
+    sort(nums.begin(), nums.end());
+    do {
+        ret.push_back(nums);
+    } while (next_permutation(nums.begin(), nums.end()));
+    return ret;
+}
 
 
 int main(int argc, char *argv[]) {

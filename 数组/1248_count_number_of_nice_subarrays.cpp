@@ -111,5 +111,16 @@ int numberOfSubarrays(vector<int>& nums, int k) {
 }
 // 方法二：前缀和
 int numOfSubarrays2(vector<int> &nums, int k) {
-    
+    unordered_map<int,int> dp;
+    // 这是考虑到如果nums数组从第一个到第k个元素都是奇数，那么此时求dp[j]-k恰好为0
+    // 如果dp中和为0的频率设置为0，那么会丢失这一次计数
+    dp[0] = 1;
+    int oddNums = 0;
+    int ans = 0;
+    for (auto val : nums) {
+        oddNums += val & 0x1;
+        ans += dp[oddNums - k];
+        dp[oddNums]++;
+    }
+    return ans;
 }
