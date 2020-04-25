@@ -42,8 +42,8 @@ void Solution::mergeCount(vector<pair<int,int>>& nums, int start, int end, vecto
 		else {
 			nums[idx++] = right[j++];
             // 应该是这里导致的超时，因为有个for循环，非常耗时，如何优化？
-            //for (int k = i; k < left.size(); k++)
-			//	count[left[k].second]++;
+            // for (int k = i; k < left.size(); k++)
+			//     count[left[k].second]++;
 		}
 	}
     while (i < left.size()) nums[idx++] = left[i++];
