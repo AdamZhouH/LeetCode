@@ -71,3 +71,20 @@ bool Solution::allNone(vector<ListNode *> &lists) {
 
 // 很笨的方法，看到Leetcode大神20ms的方法真是自愧不如了，好好学习
 // 一会把代码抄上来
+
+// 给一个使用优先队列的解法
+// 代码显得简洁很多，时间复杂度也降低，但是空间复杂度为O(k)
+ListNode *Solution::mergeKLists(vector<ListNode *>& lists) {
+    ListNode head;
+    ListNode *ptr = &head;
+    auto cmp = [](ListNode *lhs, ListNode *rhs) { return lhs->val > rhs->val;};
+    priority_queue<ListNode *, vector<ListNode *>, decltype(cmp)> q(cmp);
+    for (auto node : lists) if (node != nullptr) q.push(node);
+    while (!q.empty()) {
+        auto p = q.top(); q.pop();
+        ptr->next = p;
+        ptr = p;
+        if (p->next != nullptr) q.push(p->next);
+    }
+    return head.next;
+}
