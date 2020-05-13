@@ -9,6 +9,7 @@ using namespace std;
 // 注意数据类型和大小溢出
 // 利用递归实现代码，思路比较清晰，代码也好写
 // 注意递归的基准情况
+/**************
 class Solution {
 public:
 	double myPow(double x, int n);
@@ -28,6 +29,26 @@ double Solution::myPow(double x, int n) {
 		return x * ret * ret;
 	else
 		return ret * ret;
+}
+****************/
+// 给出迭代版本，代码更佳精简
+class Solution {
+public:
+	double myPow(double x, int n);
+};
+
+double Solution::myPow(double x, int n) {
+    if (n == 0) return double(1.0);
+    // 这里不能直接-n，如果n是最小的负数，那么取反后，直接导致溢出了
+    //if (n < 0) return 1 / myPow(x, -n);
+    bool flag = n < 0 ? true : false;
+    double base = x, ans = 1;
+    while (n != 0) {
+        if (n % 2) ans *= base;
+        base *= base;
+        n /= 2;
+    }
+    return flag ? 1/ans : ans ;
 }
 
 int main(int argc, char *argv[]) {
