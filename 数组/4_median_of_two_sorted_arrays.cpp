@@ -105,6 +105,32 @@ double Solution::findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2) 
 }
 #endif
 
+
+// 精简一点的写法
+class Solution3 {
+public:
+	double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2);
+	int findKth(vector<int> &nums1, int beg1, int m, vector<int> &nums2, int beg2, int n, int k);
+};
+
+int Solution3::findKth(vector<int> &nums1, int i, int m, vector<int> &nums2, int j, int n, int k) {
+	if (m <= 0) return nums2[j+k-1];
+    if (n <= 0) return nums1[i+k-1];
+    if (k == 1) return min(nums1[i], nums2[j]);
+    int a = (m >= k/2) ? k/2 : m;
+    int b = (n >= k-a) ? k-a : n;
+    if (nums1[i+a-1] > nums2[j+b-1]) return findKth(nums1,i,m,nums2,j+b,n-b,k-b);
+    else return findKth(nums1,i+a,m-a,nums2,j,n,k-a);
+}
+
+double Solution3::findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2) {
+	int len = nums1.size() + nums2.size();
+    if (len % 2) return (double)findKth(nums1, 0, nums1.size(), nums2, 0, nums2.size(), len/2+1);
+    else return ((double)findKth(nums1, 0, nums1.size(),nums2, 0, nums2.size(),len/2)
+               + (double)findKth(nums1, 0, nums1.size(), nums2, 0, nums2.size(), len/2+1)) / 2.0;
+}
+
+
 int main(int argc, char *argv[]) {
 	vector<int> nums1 = {1};
 	vector<int> nums2 = {1};

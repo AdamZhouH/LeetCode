@@ -36,6 +36,7 @@ void Solution::nextPermutation(vector<int>& nums) {
         nums[i-1] = nums[j];
         nums[j] = tmp;
     } else {
+		// 说明全部是逆序，已经是最大的字典序的序列了，那么需要回到开头最小的那个序列，直接reverse即可，而不需要交换
         reverse(nums, 0, nums.size() - 1);
     }
     return;
