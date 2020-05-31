@@ -1,3 +1,6 @@
+#include <vector>
+#include <stack>
+using namespace std;
 // 看起来很难，实际上想明白了很简单的一道题
 
 // 想明白一点，从一侧，往中间最高处进行遍历，如果当前的高度，比前一个最大高度大，那么这两个高度之间肯定可以存水
@@ -42,3 +45,21 @@ int Solution::trap(vector<int> &height) {
     }
     return ret;
 }
+
+// 补充单调栈解法，主要是要知道每个元素的左右两侧第一个更大的元素
+// 然后可以计算他们之间的存储水的面结
+int trap(vector<int>& height) {
+    if (height.size() < 3) return 0;
+    stack<int> stk;
+    int container = 0;
+    for (int i = 0; i < height.size(); i++) {
+        while (!stk.empty() && height[stk.top()] <= height[i]) {
+            int idx = stk.top(); stk.pop();
+            if (stk.empty()) break;
+            container += (min(height[stk.top()], height[i])-height[idx]) * (i-stk.top()-1);
+        }
+        stk.push(i);
+    }
+    return container;
+}
+
