@@ -42,3 +42,41 @@ int Solution::longestConsecutive(vector<int> &nums) {
 	}
     return maxLen;
 }
+
+// 并查集思路，将能连续的元素看成是连通分量，求数组中各个连通分量的最大size即为所求
+// 因此，对于每个数字，找左侧元素和右侧元素，如果存在，则分别和左侧右侧元素union，同时
+// 更新联通分量的大小
+class Solution2 {
+public:
+	int find(int x, unordered_map<int,int> &uf);
+	int merge(int x, int y, unordered_map<int,int> &uf, unordered_map<int,int> &sz);
+	int longestConsecutive(vector<int> &nums);
+};
+
+int Solution2::longestConsecutive(vector<int> &nums) {
+	if (nums.empty()) return 0;
+	unordered_map<int,int> uf, sz;
+	for (auto num: nums) uf[num] = num, sz[num] = 1;
+	int ans = 1;
+	for (auto num: nums) {
+		if (num != INT_MIN && uf.count(num-1))
+			ans = max(ans, merge(num, num-1, uf, sz));
+		if (num != INT_MAX && uf.count(num+1))
+			ans = max(ans, merge(num, num+1, uf, sz));
+	}
+	return ans;
+}
+
+int Solution2::find(int x, unordered_map<int,int> &uf) {
+	if (uf[x] == x) return x;
+	uf[x] = find(uf[x], uf);
+	return uf[x];
+}
+
+int Solution2::merge(int x, int y, unordered_map<int,int> &uf, unordered_map<int,int> &sz) {
+	x = find(x, uf), y = find(y, uf);
+	if (x == y) return sz[x];
+	uf[x] = y;
+	sz[y] += sz[x];
+	return sz[y];
+}
