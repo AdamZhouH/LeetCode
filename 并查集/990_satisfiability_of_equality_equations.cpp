@@ -18,13 +18,12 @@ char Solution::find(char x, unordered_map<char, char> &uf) {
 
 void Solution::merge(char x, char y, unordered_map<char, char>& uf) {
     x = find(x,uf), y = find(y,uf);
-    if (x != y) 
+    if (x != y)
         uf[x] = y;
 }
 
 bool Solution::equationsPossible(vector<string>& equations) {
     unordered_map<char, char> uf;
-    // 开始忘记初始化并查集了，坑爹
     for (auto &v: equations) {
         if (!uf.count(v[0])) uf[v[0]] = v[0];
         if (!uf.count(v[3])) uf[v[3]] = v[3];

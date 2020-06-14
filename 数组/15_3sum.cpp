@@ -57,7 +57,7 @@ vector<vector<int>> Solution::threeSum_(vector<int> &nums) {
 // 从而保证了结果不会重复
 
 vector<vector<int>> Solution::threeSum(vector<int> &nums) {
-	if (nums.size() < 3) 
+	if (nums.size() < 3)
 		return vector<vector<int>> ();
 	set<vector<int>> result;
 	sort(nums.begin(), nums.end());
@@ -81,6 +81,33 @@ vector<vector<int>> Solution::threeSum(vector<int> &nums) {
 	return vector<vector<int>> (result.begin(), result.end());
 }
 
+// 另外一种效率高些的做法，这题主要的点在于去重
+// 用set固然可以，但是可以在迭代的时候就避免重复
+// 排序后，因为选择的三个数字都是有序的，那么分别保证第一个数字不重复，然后第二个数字不重复
+// 那么整体就肯定不会出现重复解
+// 关键在于选择第一个数字和第二个数字的时候，都判断一下是否之前已经用过了这个数字
+// 这题就用双指针就行，不适合哈希表，但如果是元素不重复并且无序，其实可以用hash做，会快一些
+// 但元素存在重复，用hash表并不好处理，反而排序后的双指针非常好用
+class Solution2 {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums);
+};
+
+vector<vector<int>> Solution2::threeSum(vector<int>& nums) {
+    vector<vector<int>> ret;
+    if (nums.size() < 3) return ret;
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < nums.size()-2; i++) {
+        if (i > 0 && nums[i] == nums[i-1]) continue;
+        for (int j = i+1, k = nums.size()-1; j < k;) {
+            if (j > i+1 && nums[j] == nums[j-1]) {j++; continue;}
+            if (nums[i] + nums[j] + nums[k] == 0) ret.push_back({nums[i],nums[j++],nums[k--]});
+            else if(nums[i] + nums[j] + nums[k] < 0) j++;
+            else k--;
+        }
+    }
+    return ret;
+}
 
 int main() {
     vector<int> nums = {-2,0,1,1,2};
