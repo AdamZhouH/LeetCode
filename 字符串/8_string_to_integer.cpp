@@ -42,6 +42,36 @@ int Solution::myAtoi(string str) {
 	return sum * sign;
 }
 
+// 更加清爽一些的写法
+class Solution2 {
+public:
+    int strToInt(string str);
+    int help(const string &str, int flag);
+};
+
+int Solution2::strToInt(string str) {
+    string::size_type pos = str.find_first_not_of(' ');
+    if (pos == string::npos || (!isdigit(str[pos])) && str[pos] != '+' && str[pos] != '-') 
+        return 0;
+    if (str[pos] == '+' || str[pos] == '-')
+        return help(str.substr(pos+1), str[pos] == '+' ? 1 : -1);
+    return help(str.substr(pos), 1);
+}
+
+int Solution2::help(const string &str, int flag) {
+    if (str.empty() || !isdigit(str[0])) return 0;
+    long long ans = 0;
+    for (int i = 0; i < str.size() && isdigit(str[i]); i++) {
+        ans = ans * 10 + str[i] - '0';
+        if (flag == 1) {
+            if (ans > INT_MAX) return INT_MAX;
+        } else {
+            if (ans * flag < INT_MIN) return INT_MIN;
+        }
+    }
+    return ans * flag;
+}
+
 int main(int argc, char **argv) {
 	string s;
 	Solution solution;

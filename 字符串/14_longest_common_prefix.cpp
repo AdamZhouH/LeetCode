@@ -7,29 +7,17 @@ using namespace std;
 class Solution {
 public:
     string longestCommonPrefix(vector<string>& strs) {
-        if (strs.empty())
-            return "";
-        string maxPrefix = "";
-        int minLength = strs[0].size();
-        for_each(strs.begin(), strs.end(), [&minLength] (const string &s) { 
-            if (s.size() < minLength)
-                minLength = s.size();
-        });
-        for (int i = 0; i < minLength; i++) {
-            bool flag = true;
-            char currChar = strs[0][i];
-            for (int j = 1; j < strs.size(); j++) {
-                if (strs[j][i] != currChar) {
-                    flag = false;
-                    break;
-                }
+        if (strs.empty()) return "";
+        string currprefix = strs[0];
+        for (int i = 1; i < strs.size(); i++) {
+            if (currprefix.empty()) break;
+            int j = 0;
+            for (; j < currprefix.size() && j < strs[i].size(); j++) {
+                if (strs[i][j] != currprefix[j]) break;
             }
-            if (flag)
-                maxPrefix.append(1, currChar);
-            else
-                break;
+            currprefix = currprefix.substr(0,j);
         }
-        return maxPrefix;
+        return currprefix;
     }
 };
 
