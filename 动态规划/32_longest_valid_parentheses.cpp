@@ -6,52 +6,24 @@
 #include <climits>
 using namespace std;
 
-// 给出括号序列中最长的合法序列的长度
+// 1.动态规划
+// 2.两次扫描
+// 3.暴力求解
 
 class Solution {
 public:
-    int longestValidParentheses(string s);
-   	bool isValid(const string& s, int i, int j);
+    int longestValidParentheses(string s) {
+        if (s.size() <= 1) return 0;
+        vector<int> dp(s.size(), 0);
+        int ms = 0;
+        for (int i = 1; i < s.size(); i++) {
+            if (s[i] == '(') continue;
+            if (s[i-1] == '(') dp[i] = (i-2 >= 0 ? dp[i-2] : 0) + 2;
+            else if (i-dp[i-1]-1 >= 0 && s[i-dp[i-1]-1] == '(') {
+                dp[i] = 2 + dp[i-1] + (i-dp[i-1]-2 >= 0 ? dp[i-dp[i-1]-2]: 0);
+            }
+            ms = max(ms, dp[i]);
+        }
+        return ms;
+    }
 };
-
-bool Solution::isValid(const string& s, int i, int j) {
-	if (i >= j)
-		return false;
-	stack<char> stk;
-	while (i <= j) {
-		if (s[i] == '(') {
-			stk.push('(');
-		} else if (s[i] == ')') {
-			if (stk.empty())
-				return false;
-			else 
-				stk.pop();
-		}
-		i++;
-	}
-	return stk.empty() ? true : false; 
-}
-
-int Solution::longestValidParentheses(string s) {
-	if (s.empty())
-		return 0;
-	// 暴力方法
-	int maxLength = 0;
-	for (int i = 0; i < s.size(); i++) {
-		for (int j = i; j < s.size(); j++) {
-			if (isValid(s, i, j)) {
-				maxLength = max(maxLength, j - i + 1);
-			}
-		}
-	}	
-	return maxLength;
-}
-
-int main(int argc, char *argv[]) {
-	string s;
-	Solution solu;
-	while (cin >> s) {
-		cout << solu.longestValidParentheses(s) << endl;
-	}
-	return 0;
-}
