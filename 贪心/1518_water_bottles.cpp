@@ -23,3 +23,8 @@ int Solution::numWaterBottles(int numBottles, int numEmptyBottles, int numExchan
 int Solution::numWaterBottles(int numBottles, int numExchange) {
     return numWaterBottles(numBottles, 0, numExchange);
 }
+
+// 现在给一个非递归版本的模拟实现（迭代方式）
+int numWaterBottles(int numBottles, int numExchange) {
+    
+}
