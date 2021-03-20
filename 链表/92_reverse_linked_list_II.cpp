@@ -43,4 +43,4 @@ public:
         newTail->next = tmpHead2;
         return dummy->next;
     }
-};H
+};
